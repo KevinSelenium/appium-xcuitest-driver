@@ -16,7 +16,7 @@ env:
 matrix:
   include:
     - osx_image: xcode8.3
-      env: TEST=unit
+      env: TEST=unit COVERALLS=1
 
     - osx_image: xcode8.3
       env: CI_METRICS=1 TEST=functional/basic
@@ -50,6 +50,7 @@ before_script:
   - npm run build
 script:
   - npm run lint && npm run mocha -- -t 480000 --recursive build/test/$TEST -g @skip-ci -i
+  - if [ -n "$COVERALLS" ]; then npm run coveralls; fi
   - if [ -n "$CI_METRICS" ]; then mkdir -p ./ci-metrics && ls -la ./ci-metrics; fi
   - if [ -n "$CI_METRICS" ]; then nvm install 7; fi
   - if [ -n "$CI_METRICS" ]; then npm install -g appium-event-parser; fi
